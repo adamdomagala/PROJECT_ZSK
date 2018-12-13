@@ -35,12 +35,14 @@ namespace WindowsFormsApplication1
     /// <param name="Status"></param>
     /// <param name="Parent"></param>
     /// <param name="OID"></param>
-    public MIBObject(string Name, string Syntax, string Access, string Status, string Parent, string OID)
+    public MIBObject(string Name, string Syntax, string Access, string Status, string Parent, string OID, string description)
     {
       name = Name;
       access = Access;
       status = Status;
       parent = Parent;
+      this.description = description;
+
       oID = OID;
       min = -1;
       max = -1;
@@ -126,6 +128,11 @@ namespace WindowsFormsApplication1
     /// // Rodzic
     /// </summary>
     public string parent { get; set; }
+    
+    /// <summary>
+    /// opis
+    /// </summary>
+    public string description { get; set; }
 
     /// <summary>
     /// Określa numer obiektu w poddrzewie

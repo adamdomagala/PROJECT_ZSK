@@ -13,6 +13,9 @@ namespace WindowsFormsApplication1
   /// Statyczna klasa ktora zawiera algorytm 
   /// Wczytujący plik na wejsciu 
   /// Rozparsowuje plik 
+  /// i przeksztalca go w strukture drzewiasta 
+  /// wpisujac wartosci w odpowiednie pola wezlow 
+  /// utworzonego drzewa
   /// </summary>
   public static class Parser
   {
@@ -42,7 +45,6 @@ namespace WindowsFormsApplication1
 
       RegexOptions options = RegexOptions.Multiline | RegexOptions.Singleline;
       // Wzorzec do naszego OBJECT-TYPE (name,syntax,access,status,description,parent,oid)
-      //string pattern_ObjectType = @"(?<name>\w*)\s*OBJECT-TYPE\s*SYNTAX\s*(?<syntax>.*?)ACCESS\s*(?<access>.*?)STATUS\s*(?<status>.*?)DESCRIPTION\s*\""(?<description>.*?)\""?\s*::=\s*[{]\s*(?<parent>.*?)\s*(?=\d)(?<id>.*?)\s*[}]";
       string wzorzec_ObjectType = @"(?<name>\w*)\s*OBJECT-TYPE\s*SYNTAX\s*(?<syntax>.*?)\s*ACCESS\s*(?<access>.*?)\s*STATUS\s*(?<status>.*?)\s*DESCRIPTION\s*\""(?<description>.*?)\""?\s*::=\s*[{]\s*(?<parent>.*?)\s*(?=\d)(?<id>.*?)\s*[}]";
 
       // Wzorzec Regex: SEQUENCE (name,values)
@@ -50,12 +52,13 @@ namespace WindowsFormsApplication1
 
       // Wzorzec do Naszego OID OBJECT IDENTIFIER (name, parent, oid)
       string wzorzec_ObjectIdentifier = @"^(?<name>\w*)\s*(?<oi>OBJECT\sIDENTIFIER)\s\:\:\=\s\{\s(?<parent>\S*)\s(?<oid>\d)\s\}";
-      //@"^(?<name>\w*)\s*(?<oi>OBJECT\sIDENTIFIER)\s\:\:\=\s\{\s(?<parent>\S*)\s(?<oid>\d)\s\}$";
 
-      string sciezkaDebug = Environment.CurrentDirectory; // System.Reflection.Assembly.GetExecutingAssembly().d;
-                                                          // Opens a text file, reads all lines of the file into a string, and then closes the file.
-      // sciezka znajduje sie w pliku Debug
-      string sciezkaPliku = sciezkaDebug + "\\RFC1213-MIB.txt";// @"C:\RFC\RFC1213-MIB.txt";
+      string aasd = @"\w*\s*OBJECT-TYPE\s*SYNTAX.*?ACCESS.*?STATUS.*?DESCRIPTION\s*\"".*?\""\s*\""::=\s *{.*?}";
+
+      string sciezkaDebug = Environment.CurrentDirectory;
+
+      // sciezka do pliku znajduje sie w pliku Debug
+      string sciezkaPliku = sciezkaDebug + "\\RFC1213-MIB.txt";
 
       try
       {
@@ -71,10 +74,20 @@ namespace WindowsFormsApplication1
         Environment.Exit(2);
       }
 
-      ///
       string text = File.ReadAllText(sciezkaPliku);
       /// Znajdz wszystkie fragmenty pasujace do wzorca object identifier
       var foundObjects = Regex.Matches(text, wzorzec_ObjectIdentifier, options);
+
+     //var fdfg = Regex.Matches(text, aasd, options);
+
+     // for (int i = 0; i < fdfg.Count; i++)
+     // {
+     //   string syntax = fdfg[i].Groups[2].Value.Replace("\n", "");
+     //   // Wybierz z grupy wartosc czwarta  [3] Access
+     //   string access = fdfg[i].Groups[3].Value.Replace("\n", "");
+     //   // Wybierz z grupy wartosc piata [4] Status
+     //   string status = fdfg[i].Groups[4].Value.Replace("\n", "");
+     // }
 
       for (int i = 0; i < foundObjects.Count; i++)
       {
@@ -82,13 +95,15 @@ namespace WindowsFormsApplication1
         var d = new MIBObject()
         {
           // [1] Name
-          name = m.Groups[1].Value.Replace("\n", ""),     
+          name = m.Groups[1].Value.Replace("\n", ""),
           parent = m.Groups[3].Value.Replace("\n", ""),//,    
           // [4] Oid
-          oid = string.Concat("1.3.6.1.2.1.", m.Groups[4].Value.Replace("\n", ""))
+          
+          oID = string.Concat("1.3.6.1.2.1.", m.Groups[4].Value.Replace("\n", ""))
         };
         ListaObiektówMIB.Add(d);
       }
+
       /// Znajdz wszystkie fragmenty pasujace do wzorca objectType
       var objectTypes = Regex.Matches(text, wzorzec_ObjectType, options);
 
@@ -102,16 +117,17 @@ namespace WindowsFormsApplication1
         // Wybierz z grupy wartosc czwarta  [3] Access
         string access = objectTypes[i].Groups[3].Value.Replace("\n", "");
         // Wybierz z grupy wartosc piata [4] Status
-        string status = objectTypes[i].Groups[4].Value.Replace("\n", "");     
-        // Wybierz z grupy wartosc szóstą [5] Desciption
-        string parent = objectTypes[i].Groups[6].Value.Replace("\n", "");
+        string status = objectTypes[i].Groups[4].Value.Replace("\n", "");
+        // Wybierz z grupy wartosc szóstą [5] Description
+        string desc = objectTypes[i].Groups[5].Value.Replace("\n", "");
         // Wybierz z grupy wartosc siódmą [6] Parent
-                                                                           //string oid = m.Groups[7].Value.Replace("\n", "");       // [7] ID
-        string parent_oid = getParentOID(objectTypes[i].Groups[6].Value.Replace("\n", ""));
+        string parent = objectTypes[i].Groups[6].Value.Replace("\n", "");
+        //string oid = m.Groups[7].Value.Replace("\n", "");       // [7] ID
+        string parent_oid = znajdzOIDrodzica(objectTypes[i].Groups[6].Value.Replace("\n", ""));
 
         string oid = string.Concat(parent_oid, ".", objectTypes[i].Groups[7].Value.Replace("\n", ""));   //sequencesList.Add(new MIBSequence(name, values));
 
-        ListaObiektówMIB.Add(new MIBObject(name, syntax, access, status, parent, oid));
+        ListaObiektówMIB.Add(new MIBObject(name, syntax, access, status, parent, oid, desc));
       }
 
       // pasujace obiekty do wzorca sequence dodaj do listy obiektów MIB  
@@ -127,7 +143,7 @@ namespace WindowsFormsApplication1
     public static void CreateSMITreeView(ref List<TreeNode> list, string parent)
     {
       /// Wybierz tylko te ktorych parent jest rowny parent
-      /// i utworz z nich liste
+      /// i utworz z nich liste LINQ
       list = ListaObiektówMIB
        .Where(mib => mib.parent == parent)
        .Select(mib => (new TreeNode(mib.name)))
@@ -138,20 +154,27 @@ namespace WindowsFormsApplication1
     public static void CreateOIList(ref List<string> list)
     {
       /// Wybierz tylko te ktorych parent jest rowny mib-2
-      /// i utworz z nich liste
+      /// i utworz z nich liste LINQ
       list = ListaObiektówMIB
         .Where(mib => mib.parent == "mib-2")
         .Select(mib => mib.name)
         .ToList();
     }
 
-    public static string displayText(string name, string value)
+    /// <summary>
+    /// Funkcja znajduje po nazwie wlasciwosci 
+    /// pole w obiekcie po czym zwraca jego wartosc
+    /// </summary>
+    /// <param name="nazwa"></param>
+    /// <param name="wartosc"></param>
+    /// <returns></returns>
+    public static string wpiszWartoscWlasciwosciWPole(string nazwa, string wartosc)
     {
       // name ; oid ; syntax ; access ; status ; min ; max
-      var mib = ListaObiektówMIB.FirstOrDefault(o => o.name == name);
+      var mib = ListaObiektówMIB.FirstOrDefault(o => o.name == nazwa);
       if (mib != null)
       {
-        switch (value)
+        switch (wartosc)
         {
           case "name": return mib.name;
           case "oid": return mib.oID;
@@ -160,6 +183,7 @@ namespace WindowsFormsApplication1
           case "status": return mib.status;
           case "min": return mib.min.ToString();
           case "max": return mib.max.ToString();
+          case "description": return mib.description.ToString();
           default: return "";
         }
       }
@@ -172,7 +196,7 @@ namespace WindowsFormsApplication1
     /// </summary>
     /// <param name="parent"></param>
     /// <returns></returns>
-    private static string getParentOID(string parent)
+    private static string znajdzOIDrodzica(string parent)
     {
       // wybierz pierwszy element z listy ktorego nazwa jest rowna
       // parentowi 

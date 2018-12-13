@@ -30,6 +30,8 @@
     {
       this.treeView1 = new System.Windows.Forms.TreeView();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.button2 = new System.Windows.Forms.Button();
+      this.button1 = new System.Windows.Forms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.txtMax = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
@@ -45,8 +47,8 @@
       this.txtName = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.button1 = new System.Windows.Forms.Button();
-      this.button2 = new System.Windows.Forms.Button();
+      this.Description = new System.Windows.Forms.RichTextBox();
+      this.label8 = new System.Windows.Forms.Label();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.SuspendLayout();
@@ -71,8 +73,30 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Struktura drzewa";
       // 
+      // button2
+      // 
+      this.button2.Location = new System.Drawing.Point(108, 333);
+      this.button2.Name = "button2";
+      this.button2.Size = new System.Drawing.Size(75, 23);
+      this.button2.TabIndex = 2;
+      this.button2.Text = "Zwiń";
+      this.button2.UseVisualStyleBackColor = true;
+      this.button2.Click += new System.EventHandler(this.button2_Click);
+      // 
+      // button1
+      // 
+      this.button1.Location = new System.Drawing.Point(6, 333);
+      this.button1.Name = "button1";
+      this.button1.Size = new System.Drawing.Size(75, 23);
+      this.button1.TabIndex = 1;
+      this.button1.Text = "Rozwiń węzły";
+      this.button1.UseVisualStyleBackColor = true;
+      this.button1.Click += new System.EventHandler(this.button1_Click);
+      // 
       // groupBox2
       // 
+      this.groupBox2.Controls.Add(this.label8);
+      this.groupBox2.Controls.Add(this.Description);
       this.groupBox2.Controls.Add(this.txtMax);
       this.groupBox2.Controls.Add(this.label5);
       this.groupBox2.Controls.Add(this.txtMin);
@@ -96,7 +120,8 @@
       // 
       // txtMax
       // 
-      this.txtMax.Location = new System.Drawing.Point(62, 189);
+      this.txtMax.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+      this.txtMax.Location = new System.Drawing.Point(62, 312);
       this.txtMax.Name = "txtMax";
       this.txtMax.ReadOnly = true;
       this.txtMax.Size = new System.Drawing.Size(236, 20);
@@ -105,7 +130,7 @@
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(16, 192);
+      this.label5.Location = new System.Drawing.Point(19, 315);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(30, 13);
       this.label5.TabIndex = 28;
@@ -113,7 +138,8 @@
       // 
       // txtMin
       // 
-      this.txtMin.Location = new System.Drawing.Point(62, 163);
+      this.txtMin.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+      this.txtMin.Location = new System.Drawing.Point(62, 283);
       this.txtMin.Name = "txtMin";
       this.txtMin.ReadOnly = true;
       this.txtMin.Size = new System.Drawing.Size(236, 20);
@@ -121,6 +147,7 @@
       // 
       // txtStatus
       // 
+      this.txtStatus.BackColor = System.Drawing.SystemColors.ButtonHighlight;
       this.txtStatus.Location = new System.Drawing.Point(62, 136);
       this.txtStatus.Name = "txtStatus";
       this.txtStatus.ReadOnly = true;
@@ -130,7 +157,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(16, 163);
+      this.label3.Location = new System.Drawing.Point(19, 286);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(27, 13);
       this.label3.TabIndex = 25;
@@ -147,6 +174,7 @@
       // 
       // txtAccess
       // 
+      this.txtAccess.BackColor = System.Drawing.SystemColors.ButtonHighlight;
       this.txtAccess.Location = new System.Drawing.Point(62, 110);
       this.txtAccess.Name = "txtAccess";
       this.txtAccess.ReadOnly = true;
@@ -155,6 +183,7 @@
       // 
       // txtSyntax
       // 
+      this.txtSyntax.BackColor = System.Drawing.SystemColors.ButtonHighlight;
       this.txtSyntax.Location = new System.Drawing.Point(62, 83);
       this.txtSyntax.Name = "txtSyntax";
       this.txtSyntax.ReadOnly = true;
@@ -181,6 +210,7 @@
       // 
       // txtOID
       // 
+      this.txtOID.BackColor = System.Drawing.SystemColors.ButtonHighlight;
       this.txtOID.Location = new System.Drawing.Point(62, 57);
       this.txtOID.Name = "txtOID";
       this.txtOID.ReadOnly = true;
@@ -189,6 +219,7 @@
       // 
       // txtName
       // 
+      this.txtName.BackColor = System.Drawing.SystemColors.ButtonHighlight;
       this.txtName.Location = new System.Drawing.Point(62, 30);
       this.txtName.Name = "txtName";
       this.txtName.ReadOnly = true;
@@ -214,25 +245,24 @@
       this.label1.TabIndex = 16;
       this.label1.Text = "Name:";
       // 
-      // button1
+      // Description
       // 
-      this.button1.Location = new System.Drawing.Point(6, 333);
-      this.button1.Name = "button1";
-      this.button1.Size = new System.Drawing.Size(75, 23);
-      this.button1.TabIndex = 1;
-      this.button1.Text = "Rozwiń węzły";
-      this.button1.UseVisualStyleBackColor = true;
-      this.button1.Click += new System.EventHandler(this.button1_Click);
+      this.Description.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+      this.Description.Location = new System.Drawing.Point(62, 162);
+      this.Description.Name = "Description";
+      this.Description.ReadOnly = true;
+      this.Description.Size = new System.Drawing.Size(236, 115);
+      this.Description.TabIndex = 30;
+      this.Description.Text = "";
       // 
-      // button2
+      // label8
       // 
-      this.button2.Location = new System.Drawing.Point(108, 333);
-      this.button2.Name = "button2";
-      this.button2.Size = new System.Drawing.Size(75, 23);
-      this.button2.TabIndex = 2;
-      this.button2.Text = "Zwiń";
-      this.button2.UseVisualStyleBackColor = true;
-      this.button2.Click += new System.EventHandler(this.button2_Click);
+      this.label8.AutoSize = true;
+      this.label8.Location = new System.Drawing.Point(16, 165);
+      this.label8.Name = "label8";
+      this.label8.Size = new System.Drawing.Size(38, 13);
+      this.label8.TabIndex = 31;
+      this.label8.Text = "Descr:";
       // 
       // Form1
       // 
@@ -272,6 +302,8 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Button button2;
     private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.Label label8;
+    private System.Windows.Forms.RichTextBox Description;
   }
 }
 

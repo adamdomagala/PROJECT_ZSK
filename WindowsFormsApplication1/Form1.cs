@@ -67,19 +67,21 @@ namespace WindowsFormsApplication1
 
         // przypisz z  z wtbranego wezla drzewa kolejno
         // =>name ; 
-        txtName.Text = Parser.displayText(treeView1.SelectedNode.Text.ToString(), "name");
+        txtName.Text = Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "name");
         // =>oid ;
-        txtOID.Text = Parser.displayText(treeView1.SelectedNode.Text.ToString(), "oid");
+        txtOID.Text = Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "oid");
         // =>syntax ; 
-        txtSyntax.Text = Parser.displayText(treeView1.SelectedNode.Text.ToString(), "syntax");
+        txtSyntax.Text = Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "syntax");
         // =>access ; 
-        txtAccess.Text = Parser.displayText(treeView1.SelectedNode.Text.ToString(), "access");
+        txtAccess.Text = Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "access");
         // =>status ; 
-        txtStatus.Text = Parser.displayText(treeView1.SelectedNode.Text.ToString(), "status");
+        txtStatus.Text = Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "status");
         // =>min ; 
-        txtMin.Text = (Int32.Parse(Parser.displayText(treeView1.SelectedNode.Text, "min")) == -1) ? "" : Parser.displayText(treeView1.SelectedNode.Text.ToString(), "min");
+        txtMin.Text = (Int32.Parse(Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text, "min")) == -1) ? "" : Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "min");
         // =>max
-        txtMax.Text = (Int32.Parse(Parser.displayText(treeView1.SelectedNode.Text, "max")) == -1) ? "" : Parser.displayText(treeView1.SelectedNode.Text.ToString(), "max");
+        txtMax.Text = (Int32.Parse(Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text, "max")) == -1) ? "" : Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "max");
+        // => description
+        Description.Text = Parser.wpiszWartoscWlasciwosciWPole(treeView1.SelectedNode.Text.ToString(), "description");
       }
       catch { }
 
