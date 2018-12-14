@@ -53,8 +53,6 @@ namespace WindowsFormsApplication1
       // Wzorzec do Naszego OID OBJECT IDENTIFIER (name, parent, oid)
       string wzorzec_ObjectIdentifier = @"^(?<name>\w*)\s*(?<oi>OBJECT\sIDENTIFIER)\s\:\:\=\s\{\s(?<parent>\S*)\s(?<oid>\d)\s\}";
 
-      string aasd = @"\w*\s*OBJECT-TYPE\s*SYNTAX.*?ACCESS.*?STATUS.*?DESCRIPTION\s*\"".*?\""\s*\""::=\s *{.*?}";
-
       string sciezkaDebug = Environment.CurrentDirectory;
 
       // sciezka do pliku znajduje sie w pliku Debug
@@ -78,16 +76,6 @@ namespace WindowsFormsApplication1
       /// Znajdz wszystkie fragmenty pasujace do wzorca object identifier
       var foundObjects = Regex.Matches(text, wzorzec_ObjectIdentifier, options);
 
-     //var fdfg = Regex.Matches(text, aasd, options);
-
-     // for (int i = 0; i < fdfg.Count; i++)
-     // {
-     //   string syntax = fdfg[i].Groups[2].Value.Replace("\n", "");
-     //   // Wybierz z grupy wartosc czwarta  [3] Access
-     //   string access = fdfg[i].Groups[3].Value.Replace("\n", "");
-     //   // Wybierz z grupy wartosc piata [4] Status
-     //   string status = fdfg[i].Groups[4].Value.Replace("\n", "");
-     // }
 
       for (int i = 0; i < foundObjects.Count; i++)
       {
@@ -96,7 +84,8 @@ namespace WindowsFormsApplication1
         {
           // [1] Name
           name = m.Groups[1].Value.Replace("\n", ""),
-          parent = m.Groups[3].Value.Replace("\n", ""),//,    
+          parent = m.Groups[3].Value.Replace("\n", ""),//, 
+          description = "",   
           // [4] Oid
           
           oID = string.Concat("1.3.6.1.2.1.", m.Groups[4].Value.Replace("\n", ""))

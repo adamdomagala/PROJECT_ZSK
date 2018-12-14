@@ -10,23 +10,6 @@ namespace WindowsFormsApplication1
   public class MIBObject
   {
     /// <summary>
-    /// Konstruktor dla dzieci mib-2
-    /// </summary>
-    /// <param name="Name"></param>
-    /// <param name="Parent"></param>
-    /// <param name="OID"></param>
-    public MIBObject(string Name, string Parent, string OID)
-    {
-      name = Name;
-      access = "";
-      status = "";
-      parent = Parent;
-      oID = string.Concat("1.3.6.1.2.1.", OID);
-      min = -1;
-      max = -1;
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="Name"></param>
@@ -43,7 +26,7 @@ namespace WindowsFormsApplication1
       parent = Parent;
       this.description = description;
 
-      oID = OID;
+      oID = string.Concat("1.3.6.1.2.1", OID);
       min = -1;
       max = -1;
 
